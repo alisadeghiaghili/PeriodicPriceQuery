@@ -149,9 +149,6 @@ group by
 
 union
 
-Use Auction_DM;
-Go
-
 Select Distinct
 	   Date.PersianDate As N'تاریخ'
 	  , Symbol.Commodity_PersianName AS N'نام تجاری کالا'
