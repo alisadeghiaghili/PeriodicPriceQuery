@@ -1,5 +1,10 @@
-Select 
-	   tarikh as N'تاریخ'
+Use Auction_DM;
+Go
+
+Declare @StartDate As char(10) = '1401/03/17',
+		@EndDate As char(10) = '1401/03/17';
+
+Select tarikh as N'تاریخ'
 	 , nameTejarieKala As N'نام تجاری کالا'
 	 , nameTolidKonande As 'نام تولید کننده'
 	 , namaad As N'نماد'
@@ -10,6 +15,7 @@ Select
 	 , vahedeVazn As N'واحد وزن'
 	 , qeymatePayeyeArze As N'قیمت پایه عرضه'
 	 , qeymateArzeDarTalar As N'قیمت عرضه در تالار'
+	 , sum(meqdareMoameleShode) As N'تقاضای پایانی (تن)'
 	 , taqazayeVoroodi As N'تقاضای ورودی - پایان سبز (تن)'
 	 , balatarinQeymateTaqaza As N'بالاترین قیمت تقاضا (ریال)'
 	 , sum(meqdareMoameleShode) As N'مقدار معامله شده'
@@ -22,15 +28,15 @@ Select
 	 , zirGorooh As N'زیرگروه کالا'
 	 , gorooh As N'گروه کالا'
 	 , gorooheAsli As N'گروه اصلی کالا'
+	 , '---' As N'جزییات سبد'
 	 , arzeKonandeh As N'عرضه کننده'
 	 , ravesheArzeh As N'روش عرضه'
 	 , codeArzeh As N'کد عرضه'
 	 , noeArzeh As 'نوع عرضه'
 	 , nahveyeArzeh As 'نحوه عرضه'
 	 , shiveyeKharid As N'شیوه خرید'
-	 , tarikheQarardad As N'تاریخ قرارداد'
-from (
-	   Select 
+From (
+Select 
 	   Date.PersianDate As tarikh
 	 , Symbol.Commodity_PersianName AS nameTejarieKala
 	 , Symbol.Producer_PersianName As nameTolidKonande
@@ -88,7 +94,7 @@ Inner Join Auction_DM.General_Dim.Date As ContractDate
 
 where Contract.IsExcess = 1
 	--And Contract.OfferItem_OriginalPK = 546517
-	And Contract.HallMatchingDate_ID Between (select ID from Auction_DM.General_Dim.Date where PersianDate = '1401/03/18') And (select ID from Auction_DM.General_Dim.Date where PersianDate = '1401/03/18')
+	And Contract.HallMatchingDate_ID Between (select ID from Auction_DM.General_Dim.Date where PersianDate = @StartDate) And (select ID from Auction_DM.General_Dim.Date where PersianDate = @EndDate)
 	--And Date.PersianDate = '1401/03/18'
 
 group by
@@ -114,11 +120,9 @@ group by
 	   , SupplyMode.bSupplyModeDesc 
 	   , BuyMethod.PersianName
 	   , CustomerContract.Quantity
-	   , ContractDate.PersianDate
-	   ) As Matching
+	   , ContractDate.PersianDate) As Matching
 
-group by 
-	   tarikh 
+group by tarikh 
 	 , nameTejarieKala
 	 , nameTolidKonande
 	 , namaad 
