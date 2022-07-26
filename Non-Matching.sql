@@ -63,9 +63,6 @@ Inner Join [Auction].[dbo].[tbSupplyMode] As SupplyMode
 Inner Join Auction_DM.Auction_Dim.Currency
 	On Offer.Currency_ID = Currency.ID
 
-where Date.PersianDate = '1401/03/18'
+where Date.ID Between (select ID from Auction_DM.General_Dim.Date where PersianDate = '1401/03/18') And (select ID from Auction_DM.General_Dim.Date where PersianDate = '1401/03/18')
 	--And Offer.OfferItem_OriginalPK = 546409;
-	And Offer.OfferItem_OriginalPK in (
-546245
- )
 --Order by 26
